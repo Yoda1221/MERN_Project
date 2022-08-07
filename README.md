@@ -25,9 +25,12 @@
 
 ## Start Project
 - npm init -y
-- nom i express
-- nom i nodemon -D
+- npm i express date-fns uuid cookie-parser cors
+- npm i nodemon -D
 
 ## Create files and folders (MacOSX Teminal)
-- md public public/css public/js public/img routes views 
-- touch server.js .gitignore public/css/style.scss routes/routes.js views/index.html views/404.html
+- md public public/css public/js public/img routes views middlewares logs services
+- touch server.js .gitignore public/css/style.scss
+- touch routes/routes.js views/index.html views/404.html
+- touch middlewares/logger.js middlewares/errorHandler.js
+- touch services/corsOptions.js services/services.js

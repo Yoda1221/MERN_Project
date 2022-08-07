@@ -1,9 +1,20 @@
-const express = require('express')
-const app = express()
-const path = require('path')
+const cors          = require('cors')
+const http          = require('http')
+const path          = require('path')
+const express       = require('express')
+const cookieParser  = require('cookie-parser')
+const corsOptions   = require('./services/corsOptions')
+const errorHandler  = require('./middlewares/ErrorHandler')
+const { logEvents, logger } = require('./middlewares/Logger')
+require('colors')
+require('dotenv').config()
 
-const PORT = process.env.PORT || 5031 // 5030
+const app           = express()
 
+app.use(logger)
+app.use(cors(/* corsOptions */)) // Cross Origin Resource Sharing
+app.use(express.json())
+app.use(cookieParser())
 app.use('/', express.static(path.join(__dirname, 'public')))
 app.use('/', require('./routes/routes'))
 
@@ -18,5 +29,13 @@ app.all('*', (req, res) => {
     }
 })
 
-app.listen(PORT, () => console.log(`SERVER IS RUNNUNG ON PORT ${PORT}`))
+app.use(errorHandler)
+const PORT          = process.env.PORT || 5031 // 5030
 
+//app.listen(PORT, () => console.log(`SERVER IS RUNNUNG ON PORT ${PORT}`))
+
+const httpServer    = http.createServer(app)
+httpServer.listen( PORT, () => {
+    logEvents(`SERVER IS RUNNING ON PORT: ${PORT}`, 'serverRunLog.txt')
+    console.log(`\n\n|-O-|\n\nSERVER IS RUNNING ON PORT: ${PORT}\t${new Date()}\n\n`.yellow)
+})
