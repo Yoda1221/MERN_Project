@@ -13,15 +13,18 @@ require('dotenv').config()
 
 const app           = express()
 const httpServer    = http.createServer(app)
+const PORT          = process.env.PORT || 5031 //** 5030
 
 dbConnect()
 
 app.use(logger)
+app.use(errorHandler)
 app.use(cors(/* corsOptions */)) // Cross Origin Resource Sharing
 app.use(express.json())
 app.use(cookieParser())
-app.use('/', express.static(path.join(__dirname, 'public')))
 app.use('/', require('./routes/routes'))
+app.use('/users', require('./routes/userRoutes.js'))
+app.use('/', express.static(path.join(__dirname, 'public')))
 
 app.all('*', (req, res) => {
     res.status(404)
@@ -34,14 +37,9 @@ app.all('*', (req, res) => {
     }
 })
 
-app.use(errorHandler)
-const PORT          = process.env.PORT || 5031 //** 5030
-
-//app.listen(PORT, () => console.log(`SERVER IS RUNNUNG ON PORT ${PORT}`))
-
 mongoose.connection.once('open', () => {
     console.log(`\n\n|-O-|\n\nCONNECTED TO MONGODB\t${colors.gray(new Date())}\n\n`.yellow)
-    
+    //** app.listen(PORT, () => console.log(`SERVER IS RUNNUNG ON PORT ${PORT}`))
 })
 
 httpServer.listen( PORT, () => {
