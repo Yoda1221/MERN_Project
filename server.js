@@ -38,13 +38,13 @@ app.all('*', (req, res) => {
 })
 
 mongoose.connection.once('open', () => {
-    console.log(`\n\n|-O-|\n\nCONNECTED TO MONGODB\t${colors.gray(new Date())}\n\n`.yellow)
+    console.log(`\n|-O-|\n\nCONNECTED TO MONGODB\t${colors.gray(new Date())}\n\n`.yellow)
     //** app.listen(PORT, () => console.log(`SERVER IS RUNNUNG ON PORT ${PORT}`))
 })
 
 httpServer.listen( PORT, () => {
     logEvents(`SERVER IS RUNNING ON PORT: ${PORT}`, 'serverRunLog.txt')
-    console.log(`\n\n|-O-|\n\nSERVER IS RUNNING ON PORT: ${PORT.brightCyan.bold}\t${colors.gray(new Date())}\n\n`.yellow)
+    console.log(`\n\n|-O-|\n\nSERVER IS RUNNING ON PORT: ${PORT.brightCyan.bold}\t${colors.gray(new Date())}\n`.yellow)
 })
 
 mongoose.connection.on('error', err => {

@@ -1,6 +1,6 @@
 const bcrypt        = require('bcrypt')
 const User          = require('../models/User')
-const asyncHAndler  = require('express-async-handler')
+const asyncHandler  = require('express-async-handler')
 
 /**
  ** GET ALL USERS FROM DATABASE
@@ -8,7 +8,7 @@ const asyncHAndler  = require('express-async-handler')
  ** @route  GET     /users
  ** @access Private 
  */
-const getAllUsers = asyncHAndler( async (req, res) => {
+const getAllUsers = asyncHandler( async (req, res) => {
     const users = await User.find().select('-password').lean()
     if (!users?.length) {
         return res.status(400).json({ message: "NO USERS FOUND!" })
@@ -22,32 +22,41 @@ const getAllUsers = asyncHAndler( async (req, res) => {
  ** @route  POST    /users
  ** @access Private 
  */
-const cerateUser = asyncHAndler( async (req, res) => {
+const cerateUser = asyncHandler( async (req, res) => {
     const { userName, email, password, roles } = req.body
-
+    let uniques = { userName, email }
+    let uniqArr = []
     //** CONFIRM DATAS
     if (!userName || !email || !password || !Array.isArray(roles) || !roles.length) {
         return res.status(400).json({ message: "MISSING DATA!" })
     }
-
     //** CHECK IS THE DATA IN THE DATABASE
     const checkData = await User.findOne({ userName }).lean().exec()
-    if (checkData) {
-        return res.status(409).json({ message: "USERNAME IS DUPLICATED!" })
-    }
+    if (checkData) return res.status(409).json({ message: "USERNAME IS DUPLICATED!" })
 
+    /* uniques = Object.entries(uniques)
+    try {
+        uniques.forEach( async unique => {
+            const checkObj = { [unique[0]]: unique[1] }
+            const checkUnique = await User.findOne( checkObj ).lean().exec()
+            console.log('checkUnique ', checkUnique)
+            if (checkUnique !== null) {
+                uniqArr.push(`${unique[0]} IS DUPLICATED!`)
+                console.log(`${unique[0]} IS DUPLICATED!`)
+                return res.status(409).json({ message: `${unique[0]} IS DUPLICATED!` })
+            }
+        })
+    } catch (e) { 
+        console.log('CHECK UNIQUE USER DATA ERROR ', e.message)
+    } */
     //** HASH PASWORD
     const hashedPass = await bcrypt.hash(password, 10)
-    const userObj = { userName, email, "password": hashedPass, roles }
-
+    const userObject = { userName, email, "password": hashedPass, roles }
     //** SAVE USER TO DATABASE
-    const user = await User.create(userObj)
-    if (user) {
-        res.status(201).json({ message: `${userName} IS CREATED!` })
-    } else {
-        res.status(400).json({ message: "INVALID USER DATA RECEIVED!" })
-    }
-
+    const user = await User.create(userObject)
+    if (user) res.status(201).json({ message: `${userName} IS CREATED!` })
+    else res.status(400).json({ message: "INVALID USER DATA RECEIVED!" })
+    res.send("ddd")
 })
 
 /**
@@ -56,7 +65,7 @@ const cerateUser = asyncHAndler( async (req, res) => {
  ** @route  PATCH   /users
  ** @access Private 
  */
-const updateUser = asyncHAndler( async (req, res) => {
+const updateUser = asyncHandler( async (req, res) => {
     const { id, userName, email, roles, active } = req.body
     
     //** CONFIRM DATAS
@@ -88,7 +97,7 @@ const updateUser = asyncHAndler( async (req, res) => {
  ** @route  DELETE  /users
  ** @access Private 
  */
-const deleteUser = asyncHAndler( async (req, res) => {
+const deleteUser = asyncHandler( async (req, res) => {
     const { id } = req.body
     if (!id) {
         return res.status(400).json({ message: "USER ID IS REQUIRED!" })
