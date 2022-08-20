@@ -10,6 +10,7 @@ const asyncHandler  = require('express-async-handler')
  */
 const getAllUsers = asyncHandler( async (req, res) => {
     const users = await User.find().select('-password').lean()
+    console.log('U ', users)
     if (!users?.length) {
         return res.status(400).json({ message: "NO USERS FOUND!" })
     }
@@ -24,6 +25,7 @@ const getAllUsers = asyncHandler( async (req, res) => {
  */
 const cerateUser = asyncHandler( async (req, res) => {
     const { userName, email, password, roles } = req.body
+    console.log('UUS ', userName, email, password, roles)
     let uniques = { userName, email }
     let uniqArr = []
     //** CONFIRM DATAS
@@ -67,7 +69,6 @@ const cerateUser = asyncHandler( async (req, res) => {
  */
 const updateUser = asyncHandler( async (req, res) => {
     const { id, userName, email, roles, active } = req.body
-    
     //** CONFIRM DATAS
     if (!id || !userName || !email || !active || !Array.isArray(roles) || !roles.length) {
         return res.status(400).json({ message: "MISSING DATA!" })
