@@ -25,17 +25,19 @@
 
 ## Start Project
 - npm init -y
-- npm i express date-fns uuid cookie-parser cors mongoose <!-- mongoose-sequence -->
-- npm i express-async-handler bcrypt
+- npm i express express-async-handler express-rate-limit
+- npm i bcrypt cookie-parser cors date-fns jsonwebtoken uuid
+- npm i mongoose <!-- mongoose-sequence -->
 - npm i nodemon -D
 
 ## Create folders (MacOSX Teminal)
 - md controllers logs middlewares models public public/css public/js public/img routes services views 
 
 ## Create files (MacOSX Teminal)
-- touch server.js .gitignore public/css/style.scss
-- touch routes/routes.js routes/userRoutes.js views/index.html views/404.html
-- touch middlewares/logger.js middlewares/errorHandler.js
-- touch services/corsOptions.js services/services.js services/dbConn.js
+- touch controllers/AuthController.js controllers/UsersController.js
+- touch middlewares/ErrorHandler.js middlewares/Logger.js middlewares/LoginLimiter.js middlewares/VerifyToken.js
 - touch models/user.js 
-- touch controllers/usersController.js 
+- touch server.js .gitignore public/css/style.scss
+- touch services/corsOptions.js services/dbConn.js services/services.js
+- touch routes/routes.js routes/authRoutes.js routes/userRoutes.js
+- touch views/index.html views/404.html

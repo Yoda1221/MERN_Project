@@ -23,6 +23,7 @@ app.use(cors(/* corsOptions */)) // Cross Origin Resource Sharing
 app.use(express.json())
 app.use(cookieParser())
 app.use('/', require('./routes/routes'))
+app.use('/auth', require('./routes/authRoutes.js'))
 app.use('/users', require('./routes/userRoutes.js'))
 app.use('/', express.static(path.join(__dirname, 'public')))
 

@@ -58,7 +58,6 @@ const cerateUser = asyncHandler( async (req, res) => {
     const user = await User.create(userObject)
     if (user) res.status(201).json({ message: `${userName} IS CREATED!` })
     else res.status(400).json({ message: "INVALID USER DATA RECEIVED!" })
-    res.send("ddd")
 })
 
 /**
